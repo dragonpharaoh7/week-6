@@ -1,4 +1,7 @@
+import os
+
 import streamlit as st
+from dotenv import load_dotenv
 
 from apputil import *
 
@@ -10,12 +13,16 @@ st.write(
 ...
 ''')
 
-# currently set for integer input
-amount = st.number_input("Exercise Input: ", 
-                         value=None, 
-                         step=1, 
-                         format="%d")
+load_dotenv()
 
-if amount is not None:
-    st.write(f"The exercise input was {amount}.")
+# constants
+ACCESS_TOKEN = os.environ['ACCESS_TOKEN']
 
+# Exercise 1
+genius = Genius(access_token=ACCESS_TOKEN)
+
+# Exercise 2
+genius.get_artist("Radiohead")
+
+# Exercise 3
+genius.get_artists(['Rihanna', 'Tycho', 'Seal', 'U2'])
