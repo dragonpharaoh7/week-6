@@ -11,12 +11,18 @@ class Genius:
     """Small wrapper around the Genius API."""
 
     def __init__(self, access_token):
+        self.access_token = access_token
         self.headers = {"Authorization": f"Bearer {access_token}"}
 
     def _get(self, path, **params):
         """GET from the Genius API and return the 'response' part."""
         url = f"https://api.genius.com{path}"
-        return requests.get(url, headers=self.headers, params=params).json()["response"]
+        response = requests.get(url, headers=self.headers, params=params)
+        data = response.json()
+        if "response" not in data:
+            raise RuntimeError(f"Genius API error {response.status_code}: "
+                               f"{data.get('meta', data)}")
+        return data["response"]
 
     def get_artist(self, search_term):
         """Return the info dict for the top artist matching `search_term`."""
